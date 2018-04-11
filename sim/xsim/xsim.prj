@@ -1,0 +1,7 @@
+verilog work \
+        ./sim_define.v\
+        ../../verilog/mod_bmp.v\
+        ../../verilog/mod_edge.v\
+        ../../verilog/mod_mem.v\
+        ../../verilog/top.v\
+	-i ../../verilog
