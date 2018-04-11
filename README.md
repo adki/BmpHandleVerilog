@@ -2,6 +2,8 @@
 
 This is an easy to use BMP (Microsoft Bitmap) handling Verilog tasks.
 
+## License
+This is licensed with the 3-clause BSD license to make the library useful in open and closed source products independent of their licensing scheme.
 
 # Quick start
 
@@ -13,7 +15,7 @@ This is an easy to use BMP (Microsoft Bitmap) handling Verilog tasks.
 
 # Basic usage
 
-   [TO READ]
+### TO READ
    1) open a BMP file
       fd_input = $fopen(bmp_input_file_name, "rb");
    2) read BMP
@@ -31,7 +33,7 @@ This is an easy to use BMP (Microsoft Bitmap) handling Verilog tasks.
             pBitMap[N*3+1] will be Green of the N-th pixel,
             pBitMap[N*3+2] will be Red of the N-th pixel.
 
-   [TO WRITE]
+### TO WRITE
    1) open a file to store BMP
       fd_output = $fopen(bmp_output_file_name, "wb");
    2) fills 'bmp_file_header[]', 'bmp_image_header[]', 'pBitMap[]'
