@@ -62,5 +62,5 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
 
    'top.v' controls overall steps by using handshake signals.
    'mod_bmp.v' first reads BMP file and writes bitmaps to 'mod_mem' using task call.
-   'mod_edge.v' first read BMP from 'mod_mem' and performs edge detection and then writes the result to 'mod_mem'
+   'mod_edge.v' first read BMP from 'mod_mem' and performs edge detection and then writes the result to 'mod_mem'.
    'mod_bmp.v' reads bitmap result and then writes to BMP file.
