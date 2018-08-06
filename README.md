@@ -67,7 +67,7 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
    'mod_edge.v' first read BMP from 'mod_mem' and performs edge detection and then writes the result to 'mod_mem'.
    'mod_bmp.v' reads bitmap result and then writes to BMP file.
  
-   ![Lenna orginal image](sim/modelsim/images/lenna_320x240.bmp) &npsp; &npsp; 
+   ![Lenna orginal image](sim/modelsim/images/lenna_320x240.bmp)  
    ![Lenna edge-detected image](sim/modelsim/images/lenna_320x240_result.bmp)
    
 # 4. Revision history
