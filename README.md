@@ -5,7 +5,7 @@ This is an easy to use BMP (Microsoft Bitmap) handling Verilog tasks.
 ## License
 This is licensed with the 3-clause BSD license to make the library useful in open and closed source products independent of their licensing scheme.
 
-# Quick start
+# 1. Quick start
 
    1) go to '$ cd sim/modelsim'
    2) run '$ make cleanup' and then '$ make'
@@ -13,9 +13,11 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
    3) preview 'result.bmp'
       '$ display result.bmp' on Ubuntu.
 
-# Basic usage
+   Note that it works with ModelSim and icarus Verilog, but does not work with Vivado Sim due to $fwriteb() bug.
 
-### TO READ
+# 2. Basic usage
+
+### 2.1 TO READ
    1) open a BMP file
       fd_input = $fopen(bmp_input_file_name, "rb");
    2) read BMP
@@ -33,7 +35,7 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
             pBitMap[N*3+1] will be Green of the N-th pixel,
             pBitMap[N*3+2] will be Red of the N-th pixel.
 
-### TO WRITE
+### 2.2 TO WRITE
    1) open a file to store BMP
       fd_output = $fopen(bmp_output_file_name, "wb");
    2) fills 'bmp_file_header[]', 'bmp_image_header[]', 'pBitMap[]'
@@ -41,7 +43,7 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
    3) write file
         bmp_write(fd_output, code);
         $fclose(fd_output);
-# Edge detection example
+# 3. Edge detection example
 
 ```
                      mod_bmp       mod_mem       mod_edge
@@ -64,3 +66,6 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
    'mod_bmp.v' first reads BMP file and writes bitmaps to 'mod_mem' using task call.
    'mod_edge.v' first read BMP from 'mod_mem' and performs edge detection and then writes the result to 'mod_mem'.
    'mod_bmp.v' reads bitmap result and then writes to BMP file.
+
+# 4. Revision history
+   * 2018.08.03: 'bmp_read_img_header' of 'tasks_bmp.v' has been update to support ImageHead Version 4.
