@@ -8,8 +8,9 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
 # 1. Quick start
 
    1) go to '$ cd sim/modelsim'
-   2) run '$ make cleanup' and then '$ make'
-      . It may take time depending on size of image and filter.
+   2) run '$ make cleanup' and then '$ make' <br>
+      . It may take time depending on size of image and filter. <br>
+      . Set 'BMP_INPUT_FILE' macro in 'Makefile' to change image.
    3) preview 'result.bmp'
       '$ display result.bmp' on Ubuntu.
 
