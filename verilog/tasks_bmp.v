@@ -141,6 +141,7 @@ endtask
 
 //------------------------------------------------------------------------------
 // It reads file and fills BMP file header.
+// Note that the file header should be 14-byte.
 // - 'fd' BMP file descriptor.
 // - 'code' returns error if any.
 task bmp_read_file_header;
@@ -166,6 +167,7 @@ endtask
 //------------------------------------------------------------------------------
 // It reads file and fills BMP image header.
 // It reads 40-bytes from position 14.
+// Note that the image header will be 40 or 124 depending on version.
 // - 'fd' BMP file descriptor.
 // - 'code' returns error if any.
 task bmp_read_img_header;
@@ -173,10 +175,18 @@ task bmp_read_img_header;
      output integer code;
             integer pos;
             integer header_size;
+     reg [7:0] value[0:3];
+     integer offset; // file offset to PixelArray
 begin
+    code = $fseek(fd, 0, 0); // $frewind(fp);
+    code = $fseek(fd, 10, 0);
+    code = $fread(value, fd, 0, 4);
+    offset = {value[3]
+             ,value[2]
+             ,value[1]
+             ,value[0]};
     pos  = $ftell(fd);
     if (pos!=14) code = $fseek(fd, 14, 0);
-  //code = $fread(bmp_img_header, fd, 0, 40);
     code = $fread(bmp_img_header, fd);
     header_size = {bmp_img_header[3]
                   ,bmp_img_header[2]
@@ -376,6 +386,7 @@ endtask
 //------------------------------------------------------------------------------
 // Revision history:
 //
+// 2018.08.03: 'bmp_read_img_header' bug-fixed to handle ImageHeader Version 4.
 // 2018.04.08: Started by Ando Ki (adki@future-ds.com, andoki@gmail.com)
 //------------------------------------------------------------------------------
 `endif
