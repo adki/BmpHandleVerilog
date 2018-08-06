@@ -192,8 +192,9 @@ begin
                   ,bmp_img_header[2]
                   ,bmp_img_header[1]
                   ,bmp_img_header[0]};
-    if (header_size!=40) begin
-        $display("%m BMP image header size mis-match %d, but 40 expected", header_size);
+    if (header_size!=(offset-14)) begin
+        $display("%m BMP image header size mis-match %d, but %d expected",
+                  header_size, offset-14);
         code = -1;
         disable bmp_read_img_header;
     end
