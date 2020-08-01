@@ -1,7 +1,7 @@
 `ifndef TASKS_BMP_V
 `define TASKS_BMP_V
 //------------------------------------------------------------------------------
-// Copyright (c) 2018 by Ando Ki.
+// Copyright (c) 2018-2020 by Ando Ki.
 // 3-clause BSD license.
 //------------------------------------------------------------------------------
 // bmp_handle.v
@@ -10,6 +10,9 @@
 // bmp_read_file_header(width, height, code);
 // bmp_read_img_header(width, height, code);
 // bmp_read_rgb(fd, pos, sze, code);
+// bmp_get_red();
+// bmp_get_green();
+// bmp_get_blue();
 // bmp_gen_file_header(width, height);
 // bmp_gen_img_header(width, height);
 // bmp_write(fd, code);
@@ -24,7 +27,11 @@ integer   biHeight; // image heigh
 integer   biBitCount; // num of bits per pixel
 integer   biSizeImage; // size of image data
 //------------------------------------------------------------------------------
-reg [7:0] pBitMap[0:(BMP_IMG_WIDTH*BMP_IMG_HEIGHT*3)-1]; // RGB
+// Blue comes first, then Green, and then Red for 24-bit pixel case.
+reg [7:0] pBitMap     [0:(BMP_IMG_WIDTH*BMP_IMG_HEIGHT*3)-1]; // RGB
+reg [7:0] pBitMapRed  [0:BMP_IMG_WIDTH*BMP_IMG_HEIGHT-1]; // RED
+reg [7:0] pBitMapGreen[0:BMP_IMG_WIDTH*BMP_IMG_HEIGHT-1]; // GREEN
+reg [7:0] pBitMapBlue [0:BMP_IMG_WIDTH*BMP_IMG_HEIGHT-1]; // BLUE
 
 //------------------------------------------------------------------------------
 // Return the number of bytes of bitmap.
@@ -86,54 +93,54 @@ begin
                              ,bmp_file_header[ 4]
                              ,bmp_file_header[ 3]
                              ,bmp_file_header[ 2]});
-   $display("reserved=0x%08X", {bmp_file_header[ 9]
-                               ,bmp_file_header[ 8]
-                               ,bmp_file_header[ 7]
-                               ,bmp_file_header[ 6]});
-   $display("offbits=%d", {bmp_file_header[13]
-                          ,bmp_file_header[12]
-                          ,bmp_file_header[11]
-                          ,bmp_file_header[10]});
-   $display("hsize=%d",    {bmp_img_header[ 3]
-                           ,bmp_img_header[ 2]
-                           ,bmp_img_header[ 1]
-                           ,bmp_img_header[ 0]});
-   $display("width=%d",    {bmp_img_header[ 7]
-                           ,bmp_img_header[ 6]
-                           ,bmp_img_header[ 5]
-                           ,bmp_img_header[ 4]});
-   $display("width=%d",    {bmp_img_header[11]
-                           ,bmp_img_header[10]
-                           ,bmp_img_header[ 9]
-                           ,bmp_img_header[ 8]});
-   $display("Plane=%d",    {bmp_img_header[13]
-                           ,bmp_img_header[12]});
-   $display("count=%d",    {bmp_img_header[15]
-                           ,bmp_img_header[14]});
-   $display("Compress=%d", {bmp_img_header[19]
-                           ,bmp_img_header[18]
-                           ,bmp_img_header[17]
-                           ,bmp_img_header[16]});
-   $display("size=%d",     {bmp_img_header[23]
-                           ,bmp_img_header[22]
-                           ,bmp_img_header[21]
-                           ,bmp_img_header[20]});
-   $display("x=%d",        {bmp_img_header[27]
-                           ,bmp_img_header[26]
-                           ,bmp_img_header[25]
-                           ,bmp_img_header[24]});
-   $display("y=%d",        {bmp_img_header[31]
-                           ,bmp_img_header[30]
-                           ,bmp_img_header[29]
-                           ,bmp_img_header[28]});
-   $display("clrU=%d",     {bmp_img_header[35]
-                           ,bmp_img_header[34]
-                           ,bmp_img_header[33]
-                           ,bmp_img_header[32]});
-   $display("clrI=%d",     {bmp_img_header[39]
-                           ,bmp_img_header[38]
-                           ,bmp_img_header[37]
-                           ,bmp_img_header[36]});
+    $display("reserved=0x%08X", {bmp_file_header[ 9]
+                                ,bmp_file_header[ 8]
+                                ,bmp_file_header[ 7]
+                                ,bmp_file_header[ 6]});
+    $display("offbits=%d", {bmp_file_header[13]
+                           ,bmp_file_header[12]
+                           ,bmp_file_header[11]
+                           ,bmp_file_header[10]});
+    $display("hsize=%d",    {bmp_img_header[ 3]
+                            ,bmp_img_header[ 2]
+                            ,bmp_img_header[ 1]
+                            ,bmp_img_header[ 0]});
+    $display("width=%d",    {bmp_img_header[ 7]
+                            ,bmp_img_header[ 6]
+                            ,bmp_img_header[ 5]
+                            ,bmp_img_header[ 4]});
+    $display("height=%d",   {bmp_img_header[11]
+                            ,bmp_img_header[10]
+                            ,bmp_img_header[ 9]
+                            ,bmp_img_header[ 8]});
+    $display("Plane=%d",    {bmp_img_header[13]
+                            ,bmp_img_header[12]});
+    $display("count=%d",    {bmp_img_header[15]
+                            ,bmp_img_header[14]});
+    $display("Compress=%d", {bmp_img_header[19]
+                            ,bmp_img_header[18]
+                            ,bmp_img_header[17]
+                            ,bmp_img_header[16]});
+    $display("size=%d",     {bmp_img_header[23]
+                            ,bmp_img_header[22]
+                            ,bmp_img_header[21]
+                            ,bmp_img_header[20]});
+    $display("x=%d",        {bmp_img_header[27]
+                            ,bmp_img_header[26]
+                            ,bmp_img_header[25]
+                            ,bmp_img_header[24]});
+    $display("y=%d",        {bmp_img_header[31]
+                            ,bmp_img_header[30]
+                            ,bmp_img_header[29]
+                            ,bmp_img_header[28]});
+    $display("clrU=%d",     {bmp_img_header[35]
+                            ,bmp_img_header[34]
+                            ,bmp_img_header[33]
+                            ,bmp_img_header[32]});
+    $display("clrI=%d",     {bmp_img_header[39]
+                            ,bmp_img_header[38]
+                            ,bmp_img_header[37]
+                            ,bmp_img_header[36]});
 `endif
      bmp_read_rgb(fd, bfOffBits, biSizeImage, code);
 end
@@ -220,8 +227,12 @@ begin
     if ((biWidth*biHeight*(biBitCount/8))!=biSizeImage) begin
         $display("%m image size mis-match %d, but %d expected",
                 biSizeImage, (biWidth*biHeight*(biBitCount/8)));
-        code = -1;
-        disable bmp_read_img_header;
+        if (biSizeImage==0) begin
+           biSizeImage = (biWidth*biHeight*(biBitCount/8));
+        end else begin
+           code = -1;
+           disable bmp_read_img_header;
+        end
     end
     if (biSizeImage>(BMP_IMG_WIDTH*BMP_IMG_HEIGHT*3)) begin
         $display("%m image size exceed the buffer size");
@@ -249,6 +260,66 @@ begin
     end
     code = $fseek(fd, pos, 0);
     code = $fread(pBitMap, fd, 0, sze);
+end
+endtask
+
+//------------------------------------------------------------------------------
+// It fills Red components to 'pBitMapRed[]' from 'pBitMap[]'.
+// It should be called after 'bmp_read()' or 'bmp_read_rgb()'.
+task bmp_get_red;
+     integer idx, idy, idz;
+begin
+   if (biBitCount!=24) begin
+       $display("%m only 24-bpp supported");
+       $finish(2);
+   end
+   idz = 0;
+   for (idy=0; idy<biHeight; idy=idy+1) begin
+       for (idx=0; idx<biWidth; idx=idx+1) begin
+            pBitMapRed[idz] = pBitMap[idz*3+2];
+            idz = idz+1;
+       end // idx
+   end // idy
+end
+endtask
+
+//------------------------------------------------------------------------------
+// It fills Green components to 'pBitMapGreen[]' from 'pBitMap[]'.
+// It should be called after 'bmp_read()' or 'bmp_read_rgb()'.
+task bmp_get_green;
+     integer idx, idy, idz;
+begin
+   if (biBitCount!=24) begin
+       $display("%m only 24-bpp supported");
+       $finish(2);
+   end
+   idz = 0;
+   for (idy=0; idy<biHeight; idy=idy+1) begin
+       for (idx=0; idx<biWidth; idx=idx+1) begin
+            pBitMapGreen[idz] = pBitMap[idz*3+1];
+            idz = idz+1;
+       end // idx
+   end // idy
+end
+endtask
+
+//------------------------------------------------------------------------------
+// It fills Blue components to 'pBitMapBlue[]' from 'pBitMap[]'.
+// It should be called after 'bmp_read()' or 'bmp_read_rgb()'.
+task bmp_get_blue;
+     integer idx, idy, idz;
+begin
+   if (biBitCount!=24) begin
+       $display("%m only 24-bpp supported");
+       $finish(2);
+   end
+   idz = 0;
+   for (idy=0; idy<biHeight; idy=idy+1) begin
+       for (idx=0; idx<biWidth; idx=idx+1) begin
+            pBitMapBlue[idz] = pBitMap[idz*3];
+            idz = idz+1;
+       end // idx
+   end // idy
 end
 endtask
 
@@ -346,6 +417,10 @@ task bmp_write;
             integer num;
             integer pos;
 begin
+    `ifdef XILINX_SIMULATOR
+    $display("%m XSIM does have bug of $fwrite() and $fwriteb()!");
+    $finish(2);
+    `else
     $fwriteb(fd, "%u", {bmp_file_header[ 3],
                         bmp_file_header[ 2],
                         bmp_file_header[ 1],
@@ -382,11 +457,13 @@ begin
          if (pBitMap[num]==8'h00) $fwriteb(fd, "%c", 8'h01);
          else $fwriteb(fd, "%c", pBitMap[num]); // this may not write 0x00.
     end
+    `endif
 end
 endtask
 //------------------------------------------------------------------------------
 // Revision history:
 //
+// 2020.07.31: 'pBitMapRed/Green/Blue' added and 'bmp_get_red/green/blue' added.
 // 2018.08.03: 'bmp_read_img_header' bug-fixed to handle ImageHeader Version 4.
 // 2018.04.08: Started by Ando Ki (adki@future-ds.com, andoki@gmail.com)
 //------------------------------------------------------------------------------

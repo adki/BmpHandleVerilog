@@ -6,7 +6,9 @@
 
 `undef  VCD
 
-`define BMP_INPUT_FILE  "lenna_320x240.bmp"
+`define XSIM
+
+`define BMP_INPUT_FILE  "images/lenna_320x240.bmp"
 `define BMP_OUTPUT_FILE "result.bmp"
 `define BMP_IMG_WIDTH  640
 `define BMP_IMG_HEIGHT 480

@@ -7,26 +7,29 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
 
 # 1. Quick start
 
+   <pre><code>
    1) go to '$ cd sim/modelsim'
-   2) run '$ make cleanup' and then '$ make' <br>
-      . It may take time depending on size of image and filter. <br>
+   2) run '$ make cleanup' and then '$ make'
+      . It may take time depending on size of image and filter.
       . Set 'BMP_INPUT_FILE' macro in 'Makefile' to change image.
    3) preview 'result.bmp'
       '$ display result.bmp' on Ubuntu.
+   </code></pre>
 
    Note that it works with ModelSim and icarus Verilog, but does not work with Vivado Sim due to $fwriteb() bug.
 
 # 2. Basic usage
 
 ### 2.1 TO READ
+
+   <pre><code>
    1) open a BMP file
-      fd_input = $fopen(bmp_input_file_name, "rb");
+        fd_input = $fopen(bmp_input_file_name, "rb");
    2) read BMP
-      bmp_read(fd_input, code);
-      this step fills 'bmp_file_header[]', 'bmp_image_header[]',
-      'pBitMap[]' and others.
+        bmp_read(fd_input, code);
+      this step fills 'bmp_file_header[]', 'bmp_image_header[]', 'pBitMap[]' and others.
    3) close the BMP file if no futher use
-      $fclose(fd_input);
+        $fclose(fd_input);
    4) do your operation on 'pBitMap[0:biSizeImage-1]',
       which is 8-bit array containing BGR color components.
       E.g., pBitMap[0] will be Blue of the first pixel,
@@ -35,15 +38,20 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
             pBitMap[N*3] will be Blue of the N-th pixel,
             pBitMap[N*3+1] will be Green of the N-th pixel,
             pBitMap[N*3+2] will be Red of the N-th pixel.
+   </code></pre>
 
 ### 2.2 TO WRITE
+
+   <pre><code>
    1) open a file to store BMP
-      fd_output = $fopen(bmp_output_file_name, "wb");
+        fd_output = $fopen(bmp_output_file_name, "wb");
    2) fills 'bmp_file_header[]', 'bmp_image_header[]', 'pBitMap[]'
-      bmp_gen_file_header(); bmp_gen_img_header(); ...
+        bmp_gen_file_header(); bmp_gen_img_header(); ...
    3) write file
         bmp_write(fd_output, code);
         $fclose(fd_output);
+   </code></pre>
+
 # 3. Edge detection example
 
 ```
@@ -71,4 +79,6 @@ This is licensed with the 3-clause BSD license to make the library useful in ope
    ![Lenna orginal image](sim/modelsim/images/lenna_320x240.bmp) ![Lenna edge-detected image](sim/modelsim/images/lenna_320x240_result.bmp)
    
 # 4. Revision history
-   * 2018.08.03: 'bmp_read_img_header' of 'tasks_bmp.v' has been update to support ImageHead Version 4.
+   * 2020.07.31: 'bmp_get_red()/green()/blue()' of 'tasks_bmp.v' added.
+   * 2020.07.30: bug cased by 'biSizeImage=0' has been fixed.
+   * 2018.08.03: 'bmp_read_img_header()' of 'tasks_bmp.v' has been update to support ImageHead Version 4.
